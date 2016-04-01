@@ -117,7 +117,7 @@ public class LogCollector {
 		DateTime dateTime = new DateTime(l);
 		int hour = dateTime.getHourOfDay();
 	 	String date = dateTime.toString("yyyy-MM-dd");
-	 	Path startingDir = Paths.get(config.basePath + "/" + date + "/" + hour);
+	 	Path startingDir = Paths.get(config.basePath + "/" + date + "/" + String.format("%02d", hour));
 	 	boolean exist = Files.exists(startingDir, LinkOption.NOFOLLOW_LINKS);
 	 	if(exist){
 		 	try {
@@ -164,6 +164,7 @@ public class LogCollector {
 					bf.get(dst, 0, length - 1);
 					bf.get();
 					producer.send(new ProducerRecord<byte[], byte[]>(config.feed, dst));
+					dst = null;
 				}
 				index = i + 1;
 			}
