@@ -44,7 +44,7 @@ public class LogCollector {
 		this.map.clear();
 	 	int hour = dateTime.getHourOfDay();
 	 	String date = dateTime.toString("yyyy-MM-dd");
-	 	Path startingDir = Paths.get(config.basePath + "/" + date + "/" + hour);
+	 	Path startingDir = Paths.get(config.basePath + "/" + date + "/" + String.format("%02d", hour));
 	 	List<Path> result = new LinkedList<Path>();
 	 	Files.walkFileTree(startingDir, new FindJavaVisitor(result));
 	 	int index = 0;
