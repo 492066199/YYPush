@@ -71,6 +71,7 @@ public class Sailing {
 						
 						try {
 							newConfig = jsonMapper.readValue(entry.getValue(), Config.class);
+							newConfig.name = entry.getKey();
 						} catch (IOException e) {
 							log.info("reload config :" + entry.getKey() + "=>" + entry.getValue());
 							continue;
@@ -115,5 +116,6 @@ public class Sailing {
 		CollectorThread cur = new CollectorThread(config);
 		threadpool.submit(cur);
 		log.info("init thread: " + config.name);		
+		threadMap.put(config.name, cur);
 	}
 }
