@@ -1,9 +1,13 @@
 package com.sailing.config;
 
 import java.util.Properties;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Config {
+	@JsonIgnore
+	public String name;
 	///data0/nginx/logs/uve_core/stats
 	@JsonProperty
 	public String basePath;
@@ -15,17 +19,29 @@ public class Config {
     public String startTime;
     
     @JsonProperty
-    public int[] fileoffset;
-    
-    @JsonProperty
     public Properties kafkaProducerProps;
     
     @JsonProperty
     public String feed;
     
     @JsonProperty
-    public String zkPath;
+    public int delimiter;
     
     @JsonProperty
-    public String zkAddr;
+    public boolean useDir;
+
+	public boolean notsame(Config c) {
+		if(c == null){
+			return true;
+		}
+		if (this.name.equals(c.name) && this.basePath.equals(c.basePath)
+				&& this.suffix.equals(c.suffix)
+				&& this.startTime.equals(c.startTime)
+				&& this.feed.equals(c.feed)
+				&& this.delimiter == c.delimiter
+				&& this.useDir == c.useDir) {
+			return true;
+		}
+		return false;
+	}
 }

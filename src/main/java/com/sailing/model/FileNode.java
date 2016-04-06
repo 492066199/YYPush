@@ -30,14 +30,14 @@ public class FileNode {
 		this.cnt = cnt;
 	}
 	
-	public static void main(String[] args) {
-		ByteBuffer buffer = ByteBuffer.allocateDirect(100000);
-		buffer.clear();
-		byte[] src = new byte[]{1, 3, 5, 6, 9};
-		buffer.put(src);
-		buffer.flip();
-		for (int i = 0; i < buffer.limit(); i++) {
-			System.out.println(buffer.get());
+	public static void main(String[] args){
+		Thread.currentThread().interrupt();
+		try {
+			System.out.println(Thread.currentThread().isInterrupted());
+			Thread.sleep(1000L);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			System.out.println(Thread.currentThread().isInterrupted());
 		}
 	}
 	public long getLastFinalLength() {

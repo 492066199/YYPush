@@ -1,32 +1,17 @@
-[
-    {
-        "basePath": "F://",
-        "suffix": "stats_v2.txt",
-        "startTime": "2016-03-30T15:00:00",
-        "fileoffset": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-        ],
-        "kafkaProducerProps": {
-            "bootstrap.servers": "172.16.89.128:9092",
-			"acks": "all",
-			"retries": 0,
-			"batch.size": 16384,
-			"linger.ms": 1,
-			"buffer.memory": 33554432,
-			"key.serializer": "org.apache.kafka.common.serialization.ByteArraySerializer",
-			"value.serializer": "org.apache.kafka.common.serialization.ByteArraySerializer"
-        },
-        "feed": "test",
-        "zkPath": "logpush/datas",
-        "zkAddr": "172.16.88.230:2181,172.16.89.128:2181,172.16.89.129:2181"
-    }
-]
+{
+    "basePath": "F://",
+    "suffix": "stats_v2.txt",
+    "startTime": "2016-03-30T15:00:00",
+    "kafkaProducerProps": {
+        "bootstrap.servers": "172.16.89.128:9092",
+		"acks": "all",
+		"retries": 0,
+		"batch.size": 16384,
+		"linger.ms": 1,
+		"buffer.memory": 33554432,
+		"key.serializer": "org.apache.kafka.common.serialization.ByteArraySerializer",
+		"value.serializer": "org.apache.kafka.common.serialization.ByteArraySerializer"
+    },
+    "feed" : "test",
+    "delimiter" : "10";
+}

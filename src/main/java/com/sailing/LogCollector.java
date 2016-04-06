@@ -26,6 +26,8 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 import com.sailing.config.Config;
 import com.sailing.model.FileNode;
 
@@ -36,9 +38,6 @@ public class LogCollector {
 	private Producer<byte[], byte[]> producer;
 	private final Map<AsynchronousFileChannel, FileNode> map = new HashMap<AsynchronousFileChannel, FileNode>();
 	private final long hour = 3600 * 1000;
-	
-	private LogCollector() {
-	}
 
 	private void load(DateTime dateTime) throws IOException {
 		this.map.clear();
@@ -47,24 +46,21 @@ public class LogCollector {
 	 	Path startingDir = Paths.get(config.basePath + "/" + date + "/" + String.format("%02d", hour));
 	 	List<Path> result = new LinkedList<Path>();
 	 	Files.walkFileTree(startingDir, new FindJavaVisitor(result));
-	 	int index = 0;
 		for (Path p : result) {
 			AsynchronousFileChannel channel = AsynchronousFileChannel.open(p, StandardOpenOption.READ);
 			FileNode node = new FileNode();
 			node.setBf(ByteBuffer.allocate(100000));
 			node.getBf().clear();
 			node.setCnt(null);
-			node.setOffset(config.fileoffset[index]);
+			node.setOffset(0);
 			node.setCurTime(dateTime.getMillis());
 			this.map.put(channel, node);
-			index ++;
 			log.info("load file successs:" + p.toAbsolutePath());
 		}
 		log.info("init successs!");
 	}
 	
-	public void process() throws IOException,
-			InterruptedException, ExecutionException, TimeoutException {
+	public void process() throws IOException, ExecutionException, TimeoutException {
 		while(true){
 			int count = 0;
 			while (true) {
@@ -74,14 +70,20 @@ public class LogCollector {
 				}
 	
 				for (FileNode node : this.map.values()) {
-					Integer cnt = node.getCnt().get();
-					if (cnt > 0) {
-						handle(node);
-					}else if(!node.isHasReadEOF()){
-						if(check(node.getCurTime())){
-							count = count + 1;
-							node.setHasReadEOF(true);
+					try {
+						Integer cnt = 0;
+						cnt = node.getCnt().get();					
+						if (cnt > 0) {
+							handle(node);
+						}else if(!node.isHasReadEOF()){
+							if(check(node.getCurTime())){
+								count = count + 1;
+								node.setHasReadEOF(true);
+							}
 						}
+					} catch (InterruptedException e) {
+						log.info("thread " + this.config.name + "has stop by main interupt");
+						return;
 					}
 				}
 				
@@ -99,15 +101,11 @@ public class LogCollector {
 		}
 	}
 	
-	private boolean check(long curTime) {
+	private boolean check(long curTime) throws InterruptedException {
 		DateTime now = new DateTime();
 		DateTime cur = new DateTime(curTime);
 		if(now.getHourOfDay() == cur.getHourOfDay()){
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			Thread.sleep(2000);
 			return false;
 		}
 		return checkFile(curTime + hour);
@@ -150,10 +148,11 @@ public class LogCollector {
 		return true;
 	}
 
-	private  void handle(FileNode node ) {		
+	private void handle(FileNode node ) {		
 		ByteBuffer bf = node.getBf();
 		bf.flip();
 		int limit = bf.limit();
+		int count = 0;
 		int index = 0;
 		for(int i = 0; i < limit; i++){
 			byte c = bf.get(i);
@@ -164,6 +163,7 @@ public class LogCollector {
 					bf.get(dst, 0, length - 1);
 					bf.get();
 					producer.send(new ProducerRecord<byte[], byte[]>(config.feed, dst));
+					count = count + 1;
 					dst = null;
 				}
 				index = i + 1;
@@ -177,8 +177,13 @@ public class LogCollector {
 		bf.put(fdst);
 		node.setOffset(node.getOffset() + limit - node.getLastFinalLength());
 		node.setLastFinalLength(finallength);
+		sendStatusInfo(count);
 	}
 	
+	private void sendStatusInfo(int count) {
+		Cat.logEvent("logsEvent", "", Event.SUCCESS, this.config.name);
+	}
+
 	public void destroy(){
 		this.producer.close();
 	}
