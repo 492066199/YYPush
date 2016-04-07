@@ -74,7 +74,7 @@ public class Sailing {
 							newConfig = jsonMapper.readValue(entry.getValue(), Config.class);
 							newConfig.name = entry.getKey();
 						} catch (IOException e) {
-							log.error("reload config :" + entry.getKey() + "=>" + entry.getValue());
+							log.error("reload config error:" + entry.getKey() + "=>" + entry.getValue() + "NOT CHANGE");
 							continue;
 						}
 						
