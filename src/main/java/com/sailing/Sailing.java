@@ -88,6 +88,7 @@ public class Sailing {
 							}
 							loadNewThread(newConfig);
 						}
+						log.info("no data change:" + entry.getKey());
 					}
 				}else {
 					Set<String> names = Sets.newHashSet();
