@@ -64,6 +64,11 @@ public class LogCollector {
 		while(true){
 			int count = 0;
 			while (true) {
+				if(Thread.interrupted()){
+					log.info("thread " + this.config.name + "has stop by main interupt");
+					return;
+				}
+				
 				for (Entry<AsynchronousFileChannel, FileNode> entry : this.map.entrySet()) {
 					Future<Integer> f = entry.getKey().read(entry.getValue().getBf(), entry.getValue().getOffset());
 					entry.getValue().setCnt(f);
@@ -82,8 +87,8 @@ public class LogCollector {
 							}
 						}
 					} catch (InterruptedException e) {
-						log.info("thread " + this.config.name + "has stop by main interupt");
-						return;
+						log.info("recv interrunpt");
+						Thread.currentThread().interrupt();
 					}
 				}
 				

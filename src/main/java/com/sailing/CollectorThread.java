@@ -48,6 +48,7 @@ public class CollectorThread implements Runnable{
 	public void stop(){
 		try {
 			curThread.interrupt();
+			log.info("send interrupte to thread:" + config.name + ",waiting for stop");
 			countDownLatch.await();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
