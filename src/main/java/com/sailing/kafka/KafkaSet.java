@@ -16,10 +16,13 @@ public class KafkaSet {
 		if(client == null){
 			client = new KafkaClient(kafkaProducerProps);
 			KafkaClient clientTrue = kafkaMap.putIfAbsent(kafkaName, client);
-			if(client != clientTrue){
+			
+			if(clientTrue != null){
 				client.close();
+				return clientTrue;
+			}else {
+				return client;				
 			}
-			return clientTrue;
 		}
 		return client;
 	}
