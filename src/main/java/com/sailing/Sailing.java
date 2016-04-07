@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -74,7 +75,7 @@ public class Sailing {
 							newConfig = jsonMapper.readValue(entry.getValue(), Config.class);
 							newConfig.name = entry.getKey();
 						} catch (IOException e) {
-							log.error("reload config error:" + entry.getKey() + "=>" + entry.getValue() + "NOT CHANGE");
+							log.error("reload config :" + entry.getKey() + "=>" + entry.getValue());
 							continue;
 						}
 						
@@ -119,8 +120,9 @@ public class Sailing {
 	
 	private void loadNewThread(Config config){
 		CollectorThread cur = new CollectorThread(config);
-		threadpool.submit(cur);
-		log.info("init thread: " + config.name);		
+		Future<?> future = threadpool.submit(cur);
+		log.info("init thread: " + config.name);	
+		cur.setFuture(future);
 		threadMap.put(config.name, cur);
 	}
 }

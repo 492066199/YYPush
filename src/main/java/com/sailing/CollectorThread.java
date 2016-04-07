@@ -3,6 +3,7 @@ package com.sailing;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
@@ -12,7 +13,12 @@ import com.sailing.config.Config;
 public class CollectorThread implements Runnable{
 	private static Logger log = Logger.getLogger(CollectorThread.class);
 	private final CountDownLatch countDownLatch = new CountDownLatch(1); 
-	private Thread curThread = null;
+	private Future<?> future = null;
+
+	public void setFuture(Future<?> future) {
+		this.future = future;
+	}
+
 	private Config config;
 	
 	public Config getConfig() {
@@ -29,7 +35,6 @@ public class CollectorThread implements Runnable{
 	
 	@Override
 	public void run() {
-		curThread = Thread.currentThread();
 		LogCollector lc = null;
 		try {
 			lc = LogCollector.build(config);
@@ -39,6 +44,7 @@ public class CollectorThread implements Runnable{
 			e.printStackTrace();
 		} finally {
 			if (lc != null) {
+				Thread.interrupted();  // realse interrupte 
 				lc.destroy();
 			}
 			countDownLatch.countDown();
@@ -47,7 +53,7 @@ public class CollectorThread implements Runnable{
 	
 	public void stop(){
 		try {
-			curThread.interrupt();
+			future.cancel(true);
 			log.info("send interrupte to thread:" + config.name + ",waiting for stop");
 			countDownLatch.await();
 		} catch (InterruptedException e) {
