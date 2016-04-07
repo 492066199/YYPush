@@ -32,7 +32,7 @@ public class Config {
 
 	public boolean notsame(Config c) {
 		if(c == null){
-			return true;
+			return false;
 		}
 		if (this.name.equals(c.name) && this.basePath.equals(c.basePath)
 				&& this.suffix.equals(c.suffix)
@@ -40,8 +40,8 @@ public class Config {
 				&& this.feed.equals(c.feed)
 				&& this.delimiter == c.delimiter
 				&& this.useDir == c.useDir) {
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 }
