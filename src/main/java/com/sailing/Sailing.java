@@ -69,12 +69,12 @@ public class Sailing {
 						CollectorThread thread = threadMap.get(entry.getKey());
 						Config newConfig = null;
 						
-						log.info("reload config :" + entry.getKey() + "=>" + entry.getValue());
+						log.info("reload config begin:" + entry.getKey() + "=>" + entry.getValue());
 						try {
 							newConfig = JsonReader.getObjectMapper().readValue(entry.getValue(), Config.class);
 							newConfig.name = entry.getKey();
 						} catch (IOException e) {
-							log.error("reload config :" + entry.getKey() + "=>" + entry.getValue());
+							log.error("reload config failed and skip:" + entry.getKey() + "=>" + entry.getValue());
 							continue;
 						}
 						
@@ -88,6 +88,7 @@ public class Sailing {
 							}
 							loadNewThread(newConfig);
 						}
+						
 						log.info("no data change:" + entry.getKey());
 					}
 				}else {

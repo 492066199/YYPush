@@ -86,10 +86,8 @@ public class ZkConfig implements Watcher {
 					sail.changeStatus.add(node);
 					sail.needReload = true;
 				} catch (KeeperException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}finally{
 					sail.c.signalAll();
@@ -99,7 +97,7 @@ public class ZkConfig implements Watcher {
 		}
 	}
 	
-	public void LoadingConfig() throws JsonParseException, JsonMappingException, IOException {	
+	public void LoadingConfig() throws IOException {	
 	    this.stat = new Stat();
 	    this.zk = new ZooKeeper("10.77.96.122:2181", 6000, this);
 		List<String> cl = null;
@@ -121,13 +119,16 @@ public class ZkConfig implements Watcher {
 					e.printStackTrace();
 				}
 				
-				if(confStr != null && !confStr.isEmpty()){
-					
-					Config config = JsonReader.getObjectMapper().readValue(confStr, Config.class);
-					config.name = son;
-					
-					sail.configs.put(son, config);
-					log.info("load config success: " + k);
+				if(confStr != null && !confStr.isEmpty()){				
+					try {
+						Config config = JsonReader.getObjectMapper().readValue(confStr, Config.class);
+						config.name = son;	
+						sail.configs.put(son, config);
+						log.info("load config success: " + k);
+					} catch (IOException e) {
+						log.info("load config error:" + k);
+						e.printStackTrace();
+					}
 				}
 			}
 		}
