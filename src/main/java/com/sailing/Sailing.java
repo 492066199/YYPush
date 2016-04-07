@@ -69,18 +69,22 @@ public class Sailing {
 						CollectorThread thread = threadMap.get(entry.getKey());
 						Config newConfig = null;
 						
+						log.info("reload config :" + entry.getKey() + "=>" + entry.getValue());
 						try {
 							newConfig = jsonMapper.readValue(entry.getValue(), Config.class);
 							newConfig.name = entry.getKey();
 						} catch (IOException e) {
-							log.info("reload config :" + entry.getKey() + "=>" + entry.getValue());
+							log.error("reload config :" + entry.getKey() + "=>" + entry.getValue());
 							continue;
 						}
 						
 						if(thread == null || thread.getConfig().notsame(newConfig)){
 							if(thread != null){
+								log.info("begin stop and remove thread :" + entry.getKey());
 								thread.stop();
 								threadMap.remove(entry.getKey());
+								log.info("success stop and remove thread :" + entry.getKey());
+								
 							}
 							loadNewThread(newConfig);
 						}
