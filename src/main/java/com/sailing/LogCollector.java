@@ -99,6 +99,8 @@ public class LogCollector {
 				break;
 			}
 		}
+		
+		log.info("exit the thread!");
 	}
 	
 	private boolean check(long curTime) throws InterruptedException {
