@@ -15,11 +15,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import org.apache.log4j.Logger;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.sailing.config.Config;
+import com.sailing.json.JsonReader;
 import com.sailing.model.ChangeNode;
 import com.sailing.zookeeper.ZkConfig;
 
@@ -28,12 +28,11 @@ public class Sailing {
 	public final Lock lock = new ReentrantLock(); 
 	public final Condition c = lock.newCondition();
 	public final List<ChangeNode> changeStatus = Lists.newArrayList();
-	public Map<String, Config> configs = null;
+	public final Map<String, Config> configs = Maps.newHashMap();
 	public final Map<String, CollectorThread> threadMap = Maps.newHashMap(); 
 	public ZkConfig zkConfig = null;
 	public boolean needReload = false;
-	public final ExecutorService threadpool = Executors.newCachedThreadPool();
-	public ObjectMapper jsonMapper = new ObjectMapper();
+	public final ExecutorService threadpool = Executors.newCachedThreadPool(); 
 	
 	public static void main(String[] args) {
 		Sailing sail = new Sailing();
@@ -72,7 +71,7 @@ public class Sailing {
 						
 						log.info("reload config :" + entry.getKey() + "=>" + entry.getValue());
 						try {
-							newConfig = jsonMapper.readValue(entry.getValue(), Config.class);
+							newConfig = JsonReader.getObjectMapper().readValue(entry.getValue(), Config.class);
 							newConfig.name = entry.getKey();
 						} catch (IOException e) {
 							log.error("reload config :" + entry.getKey() + "=>" + entry.getValue());

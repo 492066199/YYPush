@@ -1,9 +1,8 @@
 {
-    "basePath": "F://",
-    "suffix": "stats_v2.txt",
-    "startTime": "2016-03-30T15:00:00",
-    "kafkaProducerProps": {
-        "bootstrap.servers": "172.16.89.128:9092",
+    "basePath": "/data0/nginx/logs/uve_core/trace",
+    "suffix": "-trace.log",
+    "startTime": "2016-04-07T16:00:00",
+    "kafkaProducerProps":{        "bootstrap.servers": "172.16.89.128:9092",
 		"acks": "all",
 		"retries": 0,
 		"batch.size": 16384,
@@ -13,5 +12,7 @@
 		"value.serializer": "org.apache.kafka.common.serialization.ByteArraySerializer"
     },
     "feed" : "test",
-    "delimiter" : "10";
+    "delimiter" : "10",
+    "useDir" : "true"
 }
+				

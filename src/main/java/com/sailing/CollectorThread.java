@@ -38,8 +38,12 @@ public class CollectorThread implements Runnable{
 		LogCollector lc = null;
 		try {
 			lc = LogCollector.build(config);
-			log.info("build thread collector success: " + config.name);
-			lc.process();
+			if(lc == null){
+				log.info("build thread collector fail: " + config.name);				
+			}else{
+				log.info("build thread collector success: " + config.name);
+				lc.process();
+			}
 		} catch (ExecutionException | TimeoutException | IOException e) {
 			e.printStackTrace();
 		} finally {

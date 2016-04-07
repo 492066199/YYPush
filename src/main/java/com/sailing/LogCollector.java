@@ -20,22 +20,21 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.sailing.config.Config;
+import com.sailing.kafka.KafkaClient;
+import com.sailing.kafka.KafkaSet;
 import com.sailing.model.FileNode;
 
 public class LogCollector {
 	private static Logger log = Logger.getLogger(LogCollector.class);
 
 	private Config config;
-	private Producer<byte[], byte[]> producer;
+	private KafkaClient producer;
 	private final Map<AsynchronousFileChannel, FileNode> map = new HashMap<AsynchronousFileChannel, FileNode>();
 	private final long hour = 3600 * 1000;
 
@@ -169,7 +168,7 @@ public class LogCollector {
 					byte[] dst = new byte[length - 1];
 					bf.get(dst, 0, length - 1);
 					bf.get();
-					producer.send(new ProducerRecord<byte[], byte[]>(config.feed, dst));
+					producer.send(config.feed, dst);
 					count = count + 1;
 					dst = null;
 				}
@@ -209,10 +208,14 @@ public class LogCollector {
 		}
 	}
 
+	//must be thread safe
 	public static LogCollector build(Config config) throws IOException {
 		LogCollector lc = new LogCollector();
 		lc.config = config;
-		lc.producer = new KafkaProducer<byte[], byte[]>(config.kafkaProducerProps);
+		if(config.kafkaName == null){
+			return null;
+		}
+		lc.producer = KafkaSet.getKafkaProducer(config.kafkaName, config.kafkaProducerProps);
 		lc.load(DateTime.parse(config.startTime));
 		return lc;
 	}

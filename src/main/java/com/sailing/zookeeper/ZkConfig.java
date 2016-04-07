@@ -15,11 +15,11 @@ import org.apache.zookeeper.data.Stat;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.sailing.Sailing;
 import com.sailing.config.Config;
+import com.sailing.json.JsonReader;
 import com.sailing.model.ChangeNode;
 
 
@@ -46,15 +46,16 @@ public class ZkConfig implements Watcher {
 					if(ss == null){
 						ss = Lists.newArrayList();
 					}
-					Map<String, String> map = Maps.newHashMap();
 					log.info("reget config name:" + ss);
+					
+					ChangeNode node = new ChangeNode();
+					Map<String, String> map = Maps.newHashMap();
 					for (String s : ss) {
 						String son = event.getPath() + "/" + s;
 						String configStr = new String(zk.getData(son, true, stat));
 						log.info(son + " : " + configStr);
 						map.put(son, configStr);
 					}
-					ChangeNode node = new ChangeNode();
 					node.setChilds(ss);
 					node.setUseMap(false);
 					node.setMap(map);
@@ -74,12 +75,14 @@ public class ZkConfig implements Watcher {
 					String configStr;
 					configStr = new String(zk.getData(event.getPath(), true, stat));
 					log.info("path data change:" + event.getPath());
-					Map<String, String> map = Maps.newHashMap();
-					map.put(name, configStr);
+
 					ChangeNode node = new ChangeNode();
+					Map<String, String> map = Maps.newHashMap();
+					map.put(name, configStr);					
 					node.setChilds(null);
 					node.setUseMap(true);
 					node.setMap(map);
+					
 					sail.changeStatus.add(node);
 					sail.needReload = true;
 				} catch (KeeperException e) {
@@ -96,9 +99,7 @@ public class ZkConfig implements Watcher {
 		}
 	}
 	
-	public void LoadingConfig() throws JsonParseException, JsonMappingException, IOException {
-		ObjectMapper jsonMapper = new ObjectMapper();		
-		Map<String, Config> configs = Maps.newHashMap();
+	public void LoadingConfig() throws JsonParseException, JsonMappingException, IOException {	
 	    this.stat = new Stat();
 	    this.zk = new ZooKeeper("10.77.96.122:2181", 6000, this);
 		List<String> cl = null;
@@ -113,20 +114,23 @@ public class ZkConfig implements Watcher {
 			for(String k : cl){
 				String son = zkBase + '/' + k;
 				String confStr = null;;
+				
 				try {
 					confStr = new String(zk.getData(son, true, stat));
 				} catch (KeeperException | InterruptedException e) {
 					e.printStackTrace();
 				}
+				
 				if(confStr != null && !confStr.isEmpty()){
-					Config config = jsonMapper.readValue(confStr, Config.class);
+					
+					Config config = JsonReader.getObjectMapper().readValue(confStr, Config.class);
 					config.name = son;
-					configs.put(son, config);
+					
+					sail.configs.put(son, config);
 					log.info("load config success: " + k);
 				}
 			}
 		}
 		log.info("finished init config");
-		sail.configs = configs;
 	}
 }

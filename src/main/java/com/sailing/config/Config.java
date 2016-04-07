@@ -19,6 +19,9 @@ public class Config {
     public String startTime;
     
     @JsonProperty
+    public String kafkaName;
+    
+    @JsonProperty
     public Properties kafkaProducerProps;
     
     @JsonProperty
