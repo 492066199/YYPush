@@ -1,6 +1,7 @@
 package com.sailing.model;
 
 import java.nio.ByteBuffer;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
 public class FileNode {
@@ -31,12 +32,14 @@ public class FileNode {
 	}
 	
 	public static void main(String[] args){
-		Thread.currentThread().interrupt();
+		CountDownLatch countDownLatch = new CountDownLatch(1);
+		countDownLatch.countDown();
 		try {
-			System.out.println(Thread.currentThread().isInterrupted());
-			Thread.sleep(1000L);
+			countDownLatch.await();
+			System.out.println("hello world");
 		} catch (InterruptedException e) {
-			System.out.println(Thread.currentThread().isInterrupted());
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	public long getLastFinalLength() {

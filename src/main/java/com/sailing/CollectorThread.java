@@ -47,10 +47,6 @@ public class CollectorThread implements Runnable{
 		} catch (ExecutionException | TimeoutException | IOException e) {
 			e.printStackTrace();
 		} finally {
-			if (lc != null) {
-				Thread.interrupted();  // realse interrupte 
-				lc.destroy();
-			}
 			countDownLatch.countDown();
 		}
 	}
@@ -58,8 +54,8 @@ public class CollectorThread implements Runnable{
 	public void stop(){
 		try {
 			future.cancel(true);
-			log.info("send interrupte to thread:" + config.name + ",waiting for stop");
-			countDownLatch.await();
+			log.info("send interrupte to thread:" + config.name + ", waiting for stop");
+			this.countDownLatch.await();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

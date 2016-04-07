@@ -98,6 +98,7 @@ public class LogCollector {
 					break;
 				}
 			}
+			
 			if(!loadNext()){
 				log.info("load next dir error!");
 				break;
@@ -188,10 +189,6 @@ public class LogCollector {
 	
 	private void sendStatusInfo(int count) {
 		Cat.logEvent("logsEvent", "", Event.SUCCESS, this.config.name);
-	}
-
-	public void destroy(){
-		this.producer.close();
 	}
 
 	public  class FindJavaVisitor extends SimpleFileVisitor<Path> {
