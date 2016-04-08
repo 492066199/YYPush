@@ -39,9 +39,9 @@ public class CollectorThread implements Runnable{
 		try {
 			lc = DirLogCollector.build(config);
 			if(lc == null){
-				log.info("build thread collector fail: " + config.name);				
+				log.info("thread collector failed: " + config.name);				
 			}else{
-				log.info("build thread collector success: " + config.name);
+				log.info("thread collector process success: " + config.name);
 				lc.process();
 			}
 		} catch (ExecutionException | TimeoutException | IOException e) {

@@ -35,17 +35,21 @@ public class Config {
     public FileType fileType;
 
 	public boolean notsame(Config c) {
-		if(c == null){
+		try {			
+			if(c == null){
+				return false;
+			}
+			if (this.name.equals(c.name) && this.basePath.equals(c.basePath)
+					&& this.suffix.equals(c.suffix)
+					&& this.startTime.equals(c.startTime)
+					&& this.feed.equals(c.feed)
+					&& this.delimiter == c.delimiter
+					&& this.fileType.equals(c.fileType)) {
+				return false;
+			}
+			return true;
+		} catch (Exception e) {
 			return false;
 		}
-		if (this.name.equals(c.name) && this.basePath.equals(c.basePath)
-				&& this.suffix.equals(c.suffix)
-				&& this.startTime.equals(c.startTime)
-				&& this.feed.equals(c.feed)
-				&& this.delimiter == c.delimiter
-				&& this.fileType.equals(c.fileType)) {
-			return false;
-		}
-		return true;
 	}
 }
