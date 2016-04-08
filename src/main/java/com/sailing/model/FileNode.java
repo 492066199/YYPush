@@ -5,6 +5,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
 public class FileNode {
+	private String fileName;
 	private ByteBuffer bf;
 	private long offset;
 	private Future<Integer> cnt;
@@ -59,5 +60,11 @@ public class FileNode {
 	}
 	public void setCurTime(long curTime) {
 		this.curTime = curTime;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 }

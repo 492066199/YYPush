@@ -95,7 +95,8 @@ public class ZkConfig implements Watcher {
 		}
 	}
 	
-	public void LoadingConfig() throws IOException {	
+	public Map<String, Config> LoadingConfig() throws IOException {	
+		final Map<String, Config> configs = Maps.newHashMap();
 	    this.stat = new Stat();
 	    this.zk = new ZooKeeper("10.77.96.122:2181", 6000, this);
 		List<String> cl = null;
@@ -121,7 +122,7 @@ public class ZkConfig implements Watcher {
 					try {
 						Config config = JsonReader.getObjectMapper().readValue(confStr, Config.class);
 						config.name = son;	
-						sail.configs.put(son, config);
+						configs.put(son, config);
 						log.info("load config success: " + k);
 					} catch (IOException e) {
 						log.info("load config error:" + k);
@@ -131,5 +132,6 @@ public class ZkConfig implements Watcher {
 			}
 		}
 		log.info("finished init config");
+		return configs;
 	}
 }

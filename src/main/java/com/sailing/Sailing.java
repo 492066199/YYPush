@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import com.sailing.collect.CollectorThread;
 import com.sailing.config.Config;
 import com.sailing.json.JsonReader;
 import com.sailing.model.ChangeNode;
@@ -28,7 +29,6 @@ public class Sailing {
 	public final Lock lock = new ReentrantLock(); 
 	public final Condition c = lock.newCondition();
 	public final List<ChangeNode> changeStatus = Lists.newArrayList();
-	public final Map<String, Config> configs = Maps.newHashMap();
 	public final Map<String, CollectorThread> threadMap = Maps.newHashMap(); 
 	public ZkConfig zkConfig = null;
 	public boolean needReload = false;
@@ -40,8 +40,12 @@ public class Sailing {
 		sail.zkConfig = zkConfig;
 		try {
 			sail.lock.lock();
-			sail.loadConfig();
-			sail.process();
+			Map<String, Config> configs = sail.loadConfig();
+			if(configs != null){
+				for (Config config : configs.values()) {
+					sail.loadNewThread(config);
+				}
+			}
 			while(true){
 				sail.c.await();
 				sail.reloadConfigs();
@@ -53,12 +57,13 @@ public class Sailing {
 		}		
 	}
 	
-	private void loadConfig() {
+	private Map<String, Config> loadConfig() {
 		try {
-			zkConfig.LoadingConfig();
+			return zkConfig.LoadingConfig();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 
 	private void reloadConfigs() {
@@ -109,12 +114,6 @@ public class Sailing {
 			}		
 			this.needReload = false;
 			this.changeStatus.clear();
-		}
-	}
-
-	private void process() {
-		for (Config config : configs.values()) {
-			loadNewThread(config);
 		}
 	}
 	

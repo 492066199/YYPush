@@ -2,6 +2,9 @@ package com.sailing.kafka;
 
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.ReentrantLock;
+
+import org.apache.log4j.Logger;
 
 /**
  * must be thread safe
@@ -9,19 +12,24 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  */
 public class KafkaSet {
+	private final static Logger log = Logger.getLogger(KafkaSet.class);
 	private final static ConcurrentHashMap<String, KafkaClient> kafkaMap = new ConcurrentHashMap<String, KafkaClient>();
-	
+	private final static ReentrantLock lock = new ReentrantLock(); 
 	public static KafkaClient getKafkaProducer(String kafkaName, Properties kafkaProducerProps){
 		KafkaClient client = kafkaMap.get(kafkaName);
 		if(client == null){
-			client = new KafkaClient(kafkaProducerProps);
-			KafkaClient clientTrue = kafkaMap.putIfAbsent(kafkaName, client);
-			
-			if(clientTrue != null){
-				client.close();
-				return clientTrue;
-			}else {
-				return client;				
+			try {
+				lock.lock();
+				if(client == null){
+					client = new KafkaClient(kafkaProducerProps);
+					kafkaMap.put(kafkaName, client);
+					return client;
+				}
+			} catch (Exception e) {
+				log.error("create producer error!");
+				return null;
+			} finally {
+				lock.unlock();
 			}
 		}
 		return client;

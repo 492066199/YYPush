@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.sailing.collect.FileType;
 
 public class Config {
 	@JsonIgnore
@@ -31,7 +32,7 @@ public class Config {
     public int delimiter;
     
     @JsonProperty
-    public boolean useDir;
+    public FileType fileType;
 
 	public boolean notsame(Config c) {
 		if(c == null){
@@ -42,7 +43,7 @@ public class Config {
 				&& this.startTime.equals(c.startTime)
 				&& this.feed.equals(c.feed)
 				&& this.delimiter == c.delimiter
-				&& this.useDir == c.useDir) {
+				&& this.fileType.equals(c.fileType)) {
 			return false;
 		}
 		return true;

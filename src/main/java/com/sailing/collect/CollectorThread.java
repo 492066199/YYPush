@@ -1,4 +1,4 @@
-package com.sailing;
+package com.sailing.collect;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -35,9 +35,9 @@ public class CollectorThread implements Runnable{
 	
 	@Override
 	public void run() {
-		LogCollector lc = null;
+		Collector lc = null;
 		try {
-			lc = LogCollector.build(config);
+			lc = DirLogCollector.build(config);
 			if(lc == null){
 				log.info("build thread collector fail: " + config.name);				
 			}else{
