@@ -17,11 +17,12 @@
 }
 				
 {
-    "basePath": "/data0/nginx/logs/uve_core/trace",
-    "suffix": "-trace.log",
+    "basePath": "/data0/nginx/logs",
+    "suffix": "api.uve.mobile.sina.cn_access.log",
     "startTime": "2016-04-08T17:00:00",
     "kafkaName": "uveKafka",
-    "kafkaProducerProps":{        "bootstrap.servers": "172.16.89.128:9092",
+    "kafkaProducerProps":{        
+    	"bootstrap.servers": "172.16.89.128:9092",
 		"acks": "all",
 		"retries": 0,
 		"batch.size": 16384,
@@ -32,6 +33,6 @@
     },
     "feed" : "test",
     "delimiter" : "10",
-    "fileType" : "DIR"
+    "fileType" : "ACCESS"
 }
 				

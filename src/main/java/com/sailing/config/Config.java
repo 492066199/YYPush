@@ -36,12 +36,15 @@ public class Config {
 
 	public boolean notsame(Config c) {
 		try {			
+			
 			if(c == null){
 				return false;
 			}
+			
 			if (this.name.equals(c.name) && this.basePath.equals(c.basePath)
 					&& this.suffix.equals(c.suffix)
 					&& this.startTime.equals(c.startTime)
+					&& this.kafkaName.equals(c.kafkaName)
 					&& this.feed.equals(c.feed)
 					&& this.delimiter == c.delimiter
 					&& this.fileType.equals(c.fileType)) {
