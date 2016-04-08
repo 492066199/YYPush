@@ -27,7 +27,7 @@ public class FileLogColloector extends Collector{
 		this.node = new FileNode();
 		
 		node.setFileName(startingDir.toAbsolutePath().toString());
-		node.setBf(ByteBuffer.allocate(500000));
+		node.setBf(ByteBuffer.allocate(1000000));
 		node.getBf().clear();
 		node.setCnt(null);
 		node.setOffset(0);
@@ -54,6 +54,9 @@ public class FileLogColloector extends Collector{
 					cnt = node.getCnt().get();
 					if (cnt > 0) {
 						handle(node);
+						if(node.getBf().remaining() == 0){
+							Thread.sleep(2000L);
+						}
 					} else if (!node.isHasReadEOF()) {
 						if (config.fileType.check(node.getCurTime(), config)) {
 							count = count + 1;
