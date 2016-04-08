@@ -20,6 +20,7 @@ public class KafkaSet {
 		if(client == null){
 			try {
 				lock.lock();
+				client = kafkaMap.get(kafkaName);
 				if(client == null){
 					client = new KafkaClient(kafkaProducerProps);
 					kafkaMap.put(kafkaName, client);
