@@ -48,6 +48,8 @@ public class Config {
 				return false;
 			}
 			return true;
+		} catch (NullPointerException e) {
+			return true;
 		} catch (Exception e) {
 			return false;
 		}
