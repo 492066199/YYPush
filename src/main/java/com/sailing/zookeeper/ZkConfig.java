@@ -148,7 +148,7 @@ public class ZkConfig implements Watcher {
 			
 			tmpstat = this.zk.exists(zkBaseMonitor + "/" + ip , false);
 			if(tmpstat == null){
-				this.zk.create(zkBaseMonitor  + "/" + ip, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+				this.zk.create(zkBaseMonitor  + "/" + ip, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
 			}
 		} catch (KeeperException | InterruptedException e) {
 			e.printStackTrace();
