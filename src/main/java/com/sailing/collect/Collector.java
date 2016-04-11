@@ -6,8 +6,10 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import org.joda.time.DateTime;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
+import com.sailing.Sailing;
 import com.sailing.config.Config;
 import com.sailing.kafka.KafkaClient;
 import com.sailing.kafka.KafkaSet;
@@ -16,6 +18,8 @@ import com.sailing.model.FileNode;
 public abstract class Collector {
 	public Config config;
 	public KafkaClient producer;	
+	public final int prefixlength = Sailing.acceptIp.get().length() + 1;
+	public final byte[] prefix = (Sailing.acceptIp.get() + "|").getBytes();
 	
 	public void handle(FileNode node ) {		
 		ByteBuffer bf = node.getBf();
@@ -28,8 +32,9 @@ public abstract class Collector {
 			if(c == '\n'){
 				int length = (i + 1) - index;
 				if(length != 0){
-					byte[] dst = new byte[length - 1];
-					bf.get(dst, 0, length - 1);
+					byte[] dst = new byte[length - 1 + this.prefixlength];
+					System.arraycopy(prefix, 0, dst, 0, this.prefixlength);
+					bf.get(dst, this.prefixlength, length - 1);
 					bf.get();
 					producer.send(config.feed, dst);
 					count = count + 1;

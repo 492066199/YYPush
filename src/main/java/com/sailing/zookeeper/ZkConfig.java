@@ -27,6 +27,7 @@ public class ZkConfig implements Watcher {
 	private static Logger log = Logger.getLogger(ZkConfig.class);
 	public final static String zkBase = "/logpush";
 	public final static String zkBaseMonitor = "/logpushMonitor";
+	public final static String connectStr = "10.77.96.122:2181";
 	public ZooKeeper zk = null;
 	public Stat stat = null;
 	public Sailing sail;
@@ -101,7 +102,7 @@ public class ZkConfig implements Watcher {
 	public Map<String, Config> LoadingConfig() throws IOException {	
 		final Map<String, Config> configs = Maps.newHashMap();
 	    this.stat = new Stat();
-	    this.zk = new ZooKeeper("10.77.96.122:2181", 6000, this);
+	    this.zk = new ZooKeeper(connectStr, 6000, this);
 		List<String> cl = null;
 		try {
 			cl = zk.getChildren(zkBase, true);
@@ -159,7 +160,7 @@ public class ZkConfig implements Watcher {
 		final String ip = Sailing.acceptIp.get();
 		try {
 			createFather();
-			String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.').substring(zkBase.length());
+			String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.').substring(zkBase.length() + 1);
 			Stat tmpstat = this.zk.exists(namePath, false);
 			if(tmpstat == null){
 				this.zk.create(namePath, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
@@ -173,7 +174,7 @@ public class ZkConfig implements Watcher {
 		final String ip = Sailing.acceptIp.get();
 		try {
 			createFather();
-			String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.').substring(zkBase.length());
+			String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.').substring(zkBase.length() + 1);
 			Stat tmpstat = this.zk.exists(namePath, false);
 			if(tmpstat != null){
 				this.zk.delete(namePath, -1);
