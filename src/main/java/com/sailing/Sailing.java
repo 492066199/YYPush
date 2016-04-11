@@ -104,9 +104,9 @@ public class Sailing {
 								
 							}
 							loadNewThread(newConfig);
+						}else {
+							log.info("no data change:" + entry.getKey());
 						}
-						
-						log.info("no data change:" + entry.getKey());
 					}
 				}else {
 					Set<String> names = Sets.newHashSet();

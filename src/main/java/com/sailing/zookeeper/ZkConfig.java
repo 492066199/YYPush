@@ -159,7 +159,7 @@ public class ZkConfig implements Watcher {
 		final String ip = Sailing.acceptIp.get();
 		try {
 			createFather();
-			String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.').substring(1);
+			String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.').substring(zkBase.length());
 			Stat tmpstat = this.zk.exists(namePath, false);
 			if(tmpstat == null){
 				this.zk.create(namePath, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
@@ -173,7 +173,7 @@ public class ZkConfig implements Watcher {
 		final String ip = Sailing.acceptIp.get();
 		try {
 			createFather();
-			String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.').substring(1);
+			String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.').substring(zkBase.length());
 			Stat tmpstat = this.zk.exists(namePath, false);
 			if(tmpstat != null){
 				this.zk.delete(namePath, -1);
