@@ -33,7 +33,10 @@ public class Config {
     
     @JsonProperty
     public FileType fileType;
-
+    
+    @JsonProperty
+    public String ips;
+    
 	public boolean notsame(Config c) {
 		try {			
 			
@@ -47,7 +50,8 @@ public class Config {
 					&& this.kafkaName.equals(c.kafkaName)
 					&& this.feed.equals(c.feed)
 					&& this.delimiter == c.delimiter
-					&& this.fileType.equals(c.fileType)) {
+					&& this.fileType.equals(c.fileType)
+					&& this.ips.equals(c.ips)) {
 				return false;
 			}
 			return true;

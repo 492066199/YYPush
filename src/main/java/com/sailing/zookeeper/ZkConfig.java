@@ -5,11 +5,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.EventType;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
+import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 
@@ -24,6 +26,7 @@ import com.sailing.model.ChangeNode;
 public class ZkConfig implements Watcher {
 	private static Logger log = Logger.getLogger(ZkConfig.class);
 	public final static String zkBase = "/logpush";
+	public final static String zkBaseMonitor = "/logpushMonitor";
 	public ZooKeeper zk = null;
 	public Stat stat = null;
 	public Sailing sail;
@@ -133,5 +136,50 @@ public class ZkConfig implements Watcher {
 		}
 		log.info("finished init config");
 		return configs;
+	}
+
+	public void createFather(){
+		final String ip = Sailing.acceptIp.get();
+		try {
+			Stat tmpstat = this.zk.exists(zkBaseMonitor, false);
+			if(tmpstat == null){
+				this.zk.create(zkBaseMonitor, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+			}
+			
+			tmpstat = this.zk.exists(zkBaseMonitor + "/" + ip , false);
+			if(tmpstat == null){
+				this.zk.create(zkBaseMonitor  + "/" + ip, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+			}
+		} catch (KeeperException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void register(String name) {
+		final String ip = Sailing.acceptIp.get();
+		try {
+			createFather();
+			String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.');
+			Stat tmpstat = this.zk.exists(namePath, false);
+			if(tmpstat == null){
+				this.zk.create(zkBaseMonitor  + "/" + ip + "/" + name, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+			}
+		} catch (KeeperException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void cancel(String name) {
+		final String ip = Sailing.acceptIp.get();
+		try {
+			createFather();
+			String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.');
+			Stat tmpstat = this.zk.exists(namePath, false);
+			if(tmpstat != null){
+				this.zk.delete(zkBaseMonitor  + "/" + ip + "/" + name, -1);
+			}
+		} catch (KeeperException | InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

@@ -9,6 +9,7 @@ import java.util.concurrent.TimeoutException;
 import org.apache.log4j.Logger;
 
 import com.sailing.config.Config;
+import com.sailing.zookeeper.ZkMonitorPath;
 
 public class CollectorThread implements Runnable{
 	private static Logger log = Logger.getLogger(CollectorThread.class);
@@ -42,11 +43,13 @@ public class CollectorThread implements Runnable{
 				log.info("thread collector failed: " + config.name);				
 			}else{
 				log.info("thread collector process success: " + config.name);
+				ZkMonitorPath.instance.register(config.name);
 				lc.process();
 			}
 		} catch (ExecutionException | TimeoutException | IOException e) {
 			e.printStackTrace();
 		} finally {
+			ZkMonitorPath.instance.cancel(config.name);
 			countDownLatch.countDown();
 		}
 	}
