@@ -48,6 +48,7 @@ public class DirLogCollector extends Collector{
 				} catch (InterruptedException e) {
 					log.info("recv interrunpt");
 					Thread.currentThread().interrupt();
+					return;
 				}
 	 		}
 	 	}
