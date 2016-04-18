@@ -19,6 +19,9 @@ public class Config {
     @JsonProperty
     public String startTime;
     
+    @JsonProperty(defaultValue="false")
+    public boolean useStartTime;
+    
     @JsonProperty
     public String kafkaName;
     

@@ -30,6 +30,9 @@ public class DirLogCollector extends Collector{
 	
 	@Override
 	public void load(DateTime dateTime) throws IOException {
+		if(!this.config.useStartTime){
+			dateTime = new DateTime();
+		}
 		this.map.clear();
 	 	int hour = dateTime.getHourOfDay();
 	 	String date = dateTime.toString("yyyy-MM-dd");
