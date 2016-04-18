@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -26,26 +27,56 @@ public class DirLogCollector extends Collector{
 	private static Logger log = Logger.getLogger(DirLogCollector.class);
 	private final Map<AsynchronousFileChannel, FileNode> map = new HashMap<AsynchronousFileChannel, FileNode>();
 	private final long hour = 3600 * 1000;
-
+	
 	@Override
 	public void load(DateTime dateTime) throws IOException {
 		this.map.clear();
 	 	int hour = dateTime.getHourOfDay();
 	 	String date = dateTime.toString("yyyy-MM-dd");
 	 	Path startingDir = Paths.get(config.basePath + "/" + date + "/" + String.format("%02d", hour));
-	 	List<Path> result = new LinkedList<Path>();
-	 	Files.walkFileTree(startingDir, new FindJavaVisitor(result, config.suffix));
-		for (Path p : result) {
-			AsynchronousFileChannel channel = AsynchronousFileChannel.open(p, StandardOpenOption.READ);
-			FileNode node = new FileNode();
-			node.setBf(ByteBuffer.allocate(100000));
-			node.getBf().clear();
-			node.setCnt(null);
-			node.setOffset(0);
-			node.setCurTime(dateTime.getMillis());
-			this.map.put(channel, node);
-			log.info("load file successs:" + p.toAbsolutePath());
-		}
+	 	boolean exist = false;
+	 	
+	 	while(!exist){
+	 		exist = Files.exists(startingDir, LinkOption.NOFOLLOW_LINKS);
+	 		log.info("dir not exist(sleeping):" + startingDir.toAbsolutePath());
+	 		if(!exist){
+		 		try {
+					Thread.sleep(2000L);
+				} catch (InterruptedException e) {
+					log.info("recv interrunpt");
+					Thread.currentThread().interrupt();
+				}
+	 		}
+	 	}
+	 	
+	 	exist = false;
+	 	
+	 	while(!exist){
+		 	List<Path> result = new LinkedList<Path>();
+		 	Files.walkFileTree(startingDir, new FindJavaVisitor(result, config.suffix));
+			for (Path p : result) {
+				AsynchronousFileChannel channel = AsynchronousFileChannel.open(p, StandardOpenOption.READ);
+				FileNode node = new FileNode();
+				node.setBf(ByteBuffer.allocate(100000));
+				node.getBf().clear();
+				node.setCnt(null);
+				node.setOffset(0);
+				node.setCurTime(dateTime.getMillis());
+				this.map.put(channel, node);
+				log.info("load file successs:" + p.toAbsolutePath());
+			}
+			if(result.size() == 10){
+				exist = true;
+			}else {
+				try {
+					Thread.sleep(2000L);
+				} catch (InterruptedException e) {
+					log.info("recv interrunpt");
+					Thread.currentThread().interrupt();
+				}
+			}
+	 	}
+	 	
 		log.info("init successs!");
 	}
 	

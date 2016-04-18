@@ -26,7 +26,7 @@ public enum FileType {
 	SUBREQ{
 		@Override
 		public boolean checkFile(long l, Config config) {
-			DateTime dateTime = new DateTime(l - hour);
+			DateTime dateTime = new DateTime(l);
 			String date = dateTime.toString("_yyyy-MM-dd-HH");
 			Path startingDir = Paths.get(config.basePath + "/" + config.suffix + date);
 			boolean exist = Files.exists(startingDir, LinkOption.NOFOLLOW_LINKS);
@@ -38,6 +38,8 @@ public enum FileType {
 	},
 	DIR{
 		public boolean checkFile(long l, Config config) {
+			//except next hour!
+			l = l + HOUR;
 			DateTime dateTime = new DateTime(l);
 			int hour = dateTime.getHourOfDay();
 		 	String date = dateTime.toString("yyyy-MM-dd");
@@ -65,7 +67,7 @@ public enum FileType {
 		
 	};
 	
-	public final long hour = 3600 * 1000;
+	public final long HOUR = 3600 * 1000;
 	
 	protected static Logger log = Logger.getLogger(FileType.class);
 	
@@ -77,12 +79,12 @@ public enum FileType {
 			Thread.sleep(2000);
 			return false;
 		}else {
-			return checkFile(curTime + hour, config);
+			return checkFile(curTime, config);
 		}
 	}
 
 	public boolean checkFile(long l, Config config) {
-		DateTime dateTime = new DateTime(l - hour);
+		DateTime dateTime = new DateTime(l);
 	 	String date = dateTime.toString("_yyyy-MM-dd-HH");
 	 	Path startingDir = Paths.get(config.basePath + "/" + config.suffix + date + ".gz");
 	 	boolean exist = Files.exists(startingDir, LinkOption.NOFOLLOW_LINKS);

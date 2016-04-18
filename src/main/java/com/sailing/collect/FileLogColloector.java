@@ -3,6 +3,8 @@ package com.sailing.collect;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousFileChannel;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
@@ -22,6 +24,19 @@ public class FileLogColloector extends Collector{
 
 	public void load() throws IOException {
 	 	Path startingDir = Paths.get(config.basePath + "/" + config.suffix);
+	 	boolean exist = false;
+	 	while(!exist){
+		 	exist = Files.exists(startingDir, LinkOption.NOFOLLOW_LINKS);
+	 		log.info("dir not exist(sleeping):" + startingDir.toAbsolutePath());
+	 		if(!exist){
+		 		try {
+					Thread.sleep(2000L);
+				} catch (InterruptedException e) {
+					log.info("recv interrunpt");
+					Thread.currentThread().interrupt();
+				}
+	 		}
+	 	}
 	 	
 		this.channel = AsynchronousFileChannel.open(startingDir, StandardOpenOption.READ);
 		this.node = new FileNode();

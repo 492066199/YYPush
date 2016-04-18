@@ -29,7 +29,7 @@ public abstract class Collector {
 		int index = 0;
 		for(int i = 0; i < limit; i++){
 			byte c = bf.get(i);
-			if(c == '\n'){
+			if(c == config.delimiter){
 				int length = (i + 1) - index;
 				if(length != 0){
 					byte[] dst = new byte[length - 1 + this.prefixlength];
