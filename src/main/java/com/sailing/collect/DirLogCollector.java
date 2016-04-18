@@ -29,7 +29,7 @@ public class DirLogCollector extends Collector{
 	private final long hour = 3600 * 1000;
 	
 	@Override
-	public void load(DateTime dateTime) throws IOException {
+	public boolean load(DateTime dateTime) throws IOException {
 		if(!this.config.useStartTime){
 			dateTime = new DateTime();
 		}
@@ -47,8 +47,7 @@ public class DirLogCollector extends Collector{
 					Thread.sleep(2000L);
 				} catch (InterruptedException e) {
 					log.info("recv interrunpt");
-					Thread.currentThread().interrupt();
-					return;
+					return false;
 				}
 	 		}
 	 	}
@@ -82,6 +81,7 @@ public class DirLogCollector extends Collector{
 	 	}
 	 	
 		log.info("init successs!");
+		return true;
 	}
 	
 	@Override

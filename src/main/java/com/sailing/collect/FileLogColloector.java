@@ -22,7 +22,7 @@ public class FileLogColloector extends Collector{
 	private FileNode node;
 	private AsynchronousFileChannel channel;
 
-	public void load() throws IOException {
+	public boolean load() throws IOException {
 	 	Path startingDir = Paths.get(config.basePath + "/" + config.suffix);
 	 	boolean exist = false;
 	 	while(!exist){
@@ -33,8 +33,7 @@ public class FileLogColloector extends Collector{
 					Thread.sleep(2000L);
 				} catch (InterruptedException e) {
 					log.info("recv interrunpt");
-					Thread.currentThread().interrupt();
-					return;
+					return false;
 				}
 	 		}
 	 	}
@@ -51,6 +50,7 @@ public class FileLogColloector extends Collector{
 		
 		log.info("load file successs:" + startingDir.toAbsolutePath());
 		log.info("init successs!");
+		return true;
 	}
 	
 	public void process() throws IOException, ExecutionException, TimeoutException {
@@ -111,7 +111,7 @@ public class FileLogColloector extends Collector{
 	}
 
 	@Override
-	public void load(DateTime dateTime) throws IOException {
-		load();
+	public boolean load(DateTime dateTime) throws IOException {
+		return load();
 	}
 }

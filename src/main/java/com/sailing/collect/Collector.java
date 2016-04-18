@@ -51,7 +51,7 @@ public abstract class Collector {
 		node.setLastFinalLength(finallength);
 	}
 	
-	public abstract void load(DateTime dateTime) throws IOException;
+	public abstract boolean load(DateTime dateTime) throws IOException;
 	
 	public abstract void process()  throws IOException, ExecutionException, TimeoutException ;
 	
@@ -63,7 +63,9 @@ public abstract class Collector {
 		Collector lc = config.fileType.getNewCollector();
 		lc.config = config;			
 		lc.producer = KafkaSet.getKafkaProducer(config.kafkaName, config.kafkaProducerProps);
-		lc.load(DateTime.parse(config.startTime));
-		return lc;
+		if(lc.load(DateTime.parse(config.startTime))){
+			return lc;
+		}
+		return null;
 	}
 }
