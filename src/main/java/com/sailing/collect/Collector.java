@@ -7,8 +7,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.joda.time.DateTime;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
 import com.sailing.Sailing;
 import com.sailing.config.Config;
 import com.sailing.kafka.KafkaClient;
@@ -51,16 +49,11 @@ public abstract class Collector {
 		bf.put(fdst);
 		node.setOffset(node.getOffset() + limit - node.getLastFinalLength());
 		node.setLastFinalLength(finallength);
-		sendStatusInfo(count);
 	}
 	
 	public abstract void load(DateTime dateTime) throws IOException;
 	
 	public abstract void process()  throws IOException, ExecutionException, TimeoutException ;
-	
-	private void sendStatusInfo(int count) {
-		Cat.logEvent("logsEvent", "", Event.SUCCESS, this.config.name);
-	}
 	
 	//must be thread safe
 	public static Collector build(Config config) throws IOException {
