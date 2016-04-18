@@ -41,8 +41,8 @@ public class DirLogCollector extends Collector{
 	 	
 	 	while(!exist){
 	 		exist = Files.exists(startingDir, LinkOption.NOFOLLOW_LINKS);
-	 		log.info("dir not exist(sleeping):" + startingDir.toAbsolutePath());
 	 		if(!exist){
+	 			log.info("dir not exist(sleeping):" + startingDir.toAbsolutePath());
 		 		try {
 					Thread.sleep(2000L);
 				} catch (InterruptedException e) {
