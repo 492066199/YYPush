@@ -98,9 +98,12 @@ public class ZkConfig implements Watcher {
 				}
 			}
 		}else if(KeeperState.Expired == event.getState()){
+			log.info("zookeeper expared and begin to restart");
 			ZookeeperNodeLock.instance.lock();
 			ZkFactory.expare();
+			log.info("zookeeper remove old zookeeper client");
 			ZkFactory.getZkConfig();
+			log.info("zookeeper restart finished");
 			ZookeeperNodeLock.instance.signalAll();
 			ZookeeperNodeLock.instance.unlock();
 		}
@@ -193,6 +196,7 @@ public class ZkConfig implements Watcher {
 	public void handleExpare() {
 		//add watch
 		try {
+			log.info("handling expare stat");
 			this.LoadingConfig();
 			for(String key : Sailing.threadMap.keySet()){
 				this.register(key);
