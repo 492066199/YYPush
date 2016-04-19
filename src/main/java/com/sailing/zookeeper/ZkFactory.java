@@ -13,6 +13,7 @@ public class ZkFactory {
 					ZkConfig tmp = new ZkConfig(connectStr);
 					if(expare){
 						tmp.handleExpare();
+						expare = false;
 					}
 					zkConfig = tmp;
 				}
