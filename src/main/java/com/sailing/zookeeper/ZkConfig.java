@@ -27,15 +27,18 @@ public class ZkConfig implements Watcher {
 	private static Logger log = Logger.getLogger(ZkConfig.class);
 	public final static String zkBase = "/logpush";
 	public final static String zkBaseMonitor = "/logpushMonitor";
-	public final static String connectStr = "10.77.96.122:2181";
 	public ZooKeeper zk = null;
 	public Stat stat = null;
-	public Sailing sail;
 	
-	public ZkConfig(Sailing sail) {
-		this.sail = sail;
+	public ZkConfig(String connectStr) {
+		try {
+			this.zk = new ZooKeeper(connectStr, 6000, this);
+		} catch (IOException e) {
+			e.printStackTrace();
+			log.info("init zookeeper failed");
+		}
 	}
-
+	
 	@Override
 	public void process(WatchedEvent event) {
 		if(KeeperState.SyncConnected == event.getState()){
@@ -43,7 +46,7 @@ public class ZkConfig implements Watcher {
 				
 			}else if (event.getType() == EventType.NodeChildrenChanged) {
 				try {
-					sail.lock.lock();
+					ZookeeperNodeLock.instance.lock();
 					List<String> ss = zk.getChildren(event.getPath(), true);
 					if(ss == null){
 						ss = Lists.newArrayList();
@@ -62,17 +65,16 @@ public class ZkConfig implements Watcher {
 					node.setUseMap(false);
 					node.setMap(map);
 					
-					sail.changeStatus.add(node);
-					sail.needReload = true;
+					ZookeeperNodeLock.instance.addchange(node);
 				} catch (Exception e) {
 					log.info("notify load config error!");
 				}finally{
-					sail.c.signalAll();
-					sail.lock.unlock();
+					ZookeeperNodeLock.instance.signalAll();
+					ZookeeperNodeLock.instance.unlock();
 				}
 			}else if (event.getType() == EventType.NodeDataChanged) {
 				try {
-					sail.lock.lock();
+					ZookeeperNodeLock.instance.lock();
 					String name = event.getPath();
 					String configStr;
 					configStr = new String(zk.getData(event.getPath(), true, stat));
@@ -85,24 +87,28 @@ public class ZkConfig implements Watcher {
 					node.setUseMap(true);
 					node.setMap(map);
 					
-					sail.changeStatus.add(node);
-					sail.needReload = true;
+					ZookeeperNodeLock.instance.addchange(node);
 				} catch (KeeperException e) {
 					e.printStackTrace();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
-				}finally{
-					sail.c.signalAll();
-					sail.lock.unlock();
+				} finally {
+					ZookeeperNodeLock.instance.signalAll();
+					ZookeeperNodeLock.instance.unlock();
 				}
 			}
+		}else if(KeeperState.Expired == event.getState()){
+			ZookeeperNodeLock.instance.lock();
+			ZkFactory.expare();
+			ZkFactory.getZkConfig();
+			ZookeeperNodeLock.instance.signalAll();
+			ZookeeperNodeLock.instance.unlock();
 		}
 	}
 	
 	public Map<String, Config> LoadingConfig() throws IOException {	
 		final Map<String, Config> configs = Maps.newHashMap();
 	    this.stat = new Stat();
-	    this.zk = new ZooKeeper(connectStr, 6000, this);
 		List<String> cl = null;
 		try {
 			cl = zk.getChildren(zkBase, true);
@@ -180,6 +186,18 @@ public class ZkConfig implements Watcher {
 				this.zk.delete(namePath, -1);
 			}
 		} catch (KeeperException | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void handleExpare() {
+		//add watch
+		try {
+			this.LoadingConfig();
+			for(String key : Sailing.threadMap.keySet()){
+				this.register(key);
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
