@@ -23,7 +23,7 @@ public class ZkFactory {
 	
 	public static void expare(){
 		synchronized(ZkFactory.class){
-			expare = false;
+			expare = true;
 			zkConfig = null;
 		}
 	}
