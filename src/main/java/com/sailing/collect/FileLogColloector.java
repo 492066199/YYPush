@@ -22,7 +22,7 @@ public class FileLogColloector extends Collector{
 	private FileNode node;
 	private AsynchronousFileChannel channel;
 
-	public boolean load() throws IOException {
+	public boolean load(boolean first) throws IOException {
 	 	Path startingDir = Paths.get(config.basePath + "/" + config.suffix);
 	 	boolean exist = false;
 	 	while(!exist){
@@ -46,8 +46,16 @@ public class FileLogColloector extends Collector{
 		node.getBf().clear();
 		node.setCnt(null);
 		node.setOffset(0);
-		node.setCurTime(System.currentTimeMillis());
 		
+		if(first && config.useFileCurrent){
+			long size = this.channel.size();
+			if(size > 1000){
+				size = size - 1000;
+			}
+			node.setOffset(size);
+		}
+		
+		node.setCurTime(System.currentTimeMillis());		
 		log.info("load file successs:" + startingDir.toAbsolutePath());
 		log.info("init successs!");
 		return true;
@@ -102,7 +110,7 @@ public class FileLogColloector extends Collector{
 	
 	private boolean loadNext() {
 		try {
-			load();
+			load(false);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;
@@ -111,7 +119,7 @@ public class FileLogColloector extends Collector{
 	}
 
 	@Override
-	public boolean load(DateTime dateTime) throws IOException {
-		return load();
+	public boolean load(DateTime dateTime, boolean first) throws IOException {
+		return load(first);
 	}
 }

@@ -29,7 +29,7 @@ public class DirLogCollector extends Collector{
 	private final long hour = 3600 * 1000;
 	
 	@Override
-	public boolean load(DateTime dateTime) throws IOException {
+	public boolean load(DateTime dateTime, boolean first) throws IOException {
 		if(!this.config.useStartTime){
 			dateTime = new DateTime();
 		}
@@ -64,6 +64,13 @@ public class DirLogCollector extends Collector{
 				node.getBf().clear();
 				node.setCnt(null);
 				node.setOffset(0);
+				if(first && config.useFileCurrent){
+					long size = channel.size();
+					if(size > 1000){
+						size = size - 1000;
+					}
+					node.setOffset(size);
+				}
 				node.setCurTime(dateTime.getMillis());
 				this.map.put(channel, node);
 				log.info("load file successs:" + p.toAbsolutePath());
@@ -141,7 +148,7 @@ public class DirLogCollector extends Collector{
 		}
 		curTime = curTime + hour;
 		try {
-			load(new DateTime(curTime));
+			load(new DateTime(curTime), false);
 		} catch (IOException e) {
 			e.printStackTrace();
 			return false;

@@ -22,6 +22,9 @@ public class Config {
     @JsonProperty(defaultValue="false")
     public boolean useStartTime;
     
+    @JsonProperty(defaultValue="false")
+    public boolean useFileCurrent;
+    
     @JsonProperty
     public String kafkaName;
     
