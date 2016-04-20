@@ -56,7 +56,7 @@ public class FileLogColloector extends Collector{
 		}
 		
 		node.setCurTime(System.currentTimeMillis());		
-		log.info("load file successs:" + startingDir.toAbsolutePath());
+		log.info("load file successs:" + startingDir.toAbsolutePath()  + " with offset:" + node.getOffset());
 		log.info("init successs!");
 		return true;
 	}

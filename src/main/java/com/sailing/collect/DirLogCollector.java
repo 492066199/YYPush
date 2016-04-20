@@ -73,7 +73,7 @@ public class DirLogCollector extends Collector{
 				}
 				node.setCurTime(dateTime.getMillis());
 				this.map.put(channel, node);
-				log.info("load file successs:" + p.toAbsolutePath());
+				log.info("load file successs:" + p.toAbsolutePath() + " with offset:" + node.getOffset());
 			}
 			if(result.size() == 10){
 				exist = true;
