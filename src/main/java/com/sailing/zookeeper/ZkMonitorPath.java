@@ -34,4 +34,8 @@ public enum ZkMonitorPath {
 		}
 		return false;
 	}
+	
+	public void heart(String name){
+		ZkFactory.getZkConfig().heart(name);
+	}
 }

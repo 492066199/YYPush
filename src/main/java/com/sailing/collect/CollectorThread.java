@@ -38,7 +38,7 @@ public class CollectorThread implements Runnable{
 	public void run() {
 		Collector lc = null;
 		try {
-			lc = DirLogCollector.build(config);
+			lc = Collector.build(config);
 			if(lc == null){
 				log.info("thread collector failed: " + config.name);				
 			}else{

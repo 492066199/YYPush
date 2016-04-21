@@ -32,6 +32,25 @@ public enum FileType {
 			boolean exist = Files.exists(startingDir, LinkOption.NOFOLLOW_LINKS);
 			if(exist){
 				return true;
+			}else {
+				DateTime now = new DateTime();
+				if(now.getDayOfYear() != dateTime.getDayOfYear()){
+					log.info("cross a date! and last file has been remove: " + startingDir);
+					startingDir = Paths.get(config.basePath + "/" + config.suffix);
+					exist = Files.exists(startingDir, LinkOption.NOFOLLOW_LINKS);
+					if(exist){
+						try {
+							long cur = Files.getLastModifiedTime(startingDir, LinkOption.NOFOLLOW_LINKS).toMillis();
+							DateTime lastModify = new DateTime(cur);
+							if(lastModify.getMillisOfDay() > 30000){
+								return true;
+							}
+						} catch (IOException e) {
+							return false;
+						}
+						
+					}
+				}
 			}
 			return false;
 		}
@@ -90,7 +109,26 @@ public enum FileType {
 	 	boolean exist = Files.exists(startingDir, LinkOption.NOFOLLOW_LINKS);
 	 	if(exist){
 	 		return true;
-	 	}
+	 	}else {
+			DateTime now = new DateTime();
+			if(now.getDayOfYear() != dateTime.getDayOfYear()){
+				log.info("cross a date! and last file has been remove: " + startingDir);
+				startingDir = Paths.get(config.basePath + "/" + config.suffix);
+				exist = Files.exists(startingDir, LinkOption.NOFOLLOW_LINKS);
+				if(exist){
+					try {
+						long cur = Files.getLastModifiedTime(startingDir, LinkOption.NOFOLLOW_LINKS).toMillis();
+						DateTime lastModify = new DateTime(cur);
+						if(lastModify.getMillisOfDay() > 30000){
+							return true;
+						}
+					} catch (IOException e) {
+						return false;
+					}
+					
+				}
+			}
+		}
 		return false;
 	}
 	

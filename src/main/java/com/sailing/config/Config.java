@@ -57,6 +57,8 @@ public class Config {
 					&& this.feed.equals(c.feed)
 					&& this.delimiter == c.delimiter
 					&& this.fileType.equals(c.fileType)
+					&& this.useStartTime == c.useStartTime
+					&& this.useFileCurrent == c.useFileCurrent
 					&& this.ips.equals(c.ips)) {
 				return false;
 			}

@@ -14,6 +14,7 @@ import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
+import org.joda.time.DateTime;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -202,6 +203,16 @@ public class ZkConfig implements Watcher {
 				this.register(key);
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void heart(String name) {
+		final String ip = Sailing.acceptIp.get();
+		String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.').substring(zkBase.length() + 1);
+		try {
+			this.zk.setData(namePath, new DateTime().toString().getBytes(), -1);
+		} catch (KeeperException | InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

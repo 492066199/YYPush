@@ -12,18 +12,19 @@ import com.sailing.config.Config;
 import com.sailing.kafka.KafkaClient;
 import com.sailing.kafka.KafkaSet;
 import com.sailing.model.FileNode;
+import com.sailing.zookeeper.ZkMonitorPath;
 
 public abstract class Collector {
 	public Config config;
 	public KafkaClient producer;	
 	public final int prefixlength = Sailing.acceptIp.get().length() + 1;
 	public final byte[] prefix = (Sailing.acceptIp.get() + "|").getBytes();
+	private int count = 0;
 	
 	public void handle(FileNode node ) {		
 		ByteBuffer bf = node.getBf();
 		bf.flip();
 		int limit = bf.limit();
-		int count = 0;
 		int index = 0;
 		for(int i = 0; i < limit; i++){
 			byte c = bf.get(i);
@@ -35,7 +36,6 @@ public abstract class Collector {
 					bf.get(dst, this.prefixlength, length - 1);
 					bf.get();
 					producer.send(config.feed, dst);
-					count = count + 1;
 					dst = null;
 				}
 				index = i + 1;
@@ -49,6 +49,11 @@ public abstract class Collector {
 		bf.put(fdst);
 		node.setOffset(node.getOffset() + limit - node.getLastFinalLength());
 		node.setLastFinalLength(finallength);
+		if(count == 20){
+			ZkMonitorPath.instance.heart(config.name);
+			count = 0;
+		}
+		count ++;
 	}
 	
 	public abstract boolean load(DateTime dateTime, boolean first) throws IOException;
