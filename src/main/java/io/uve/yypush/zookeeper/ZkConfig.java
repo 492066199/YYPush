@@ -1,4 +1,9 @@
-package com.sailing.zookeeper;
+package io.uve.yypush.zookeeper;
+
+import io.uve.yypush.Sailing;
+import io.uve.yypush.config.Config;
+import io.uve.yypush.json.JsonReader;
+import io.uve.yypush.model.ChangeNode;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,10 +23,6 @@ import org.joda.time.DateTime;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.sailing.Sailing;
-import com.sailing.config.Config;
-import com.sailing.json.JsonReader;
-import com.sailing.model.ChangeNode;
 
 
 public class ZkConfig implements Watcher {

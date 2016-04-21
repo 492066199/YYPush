@@ -1,4 +1,6 @@
-package com.sailing.collect;
+package io.uve.yypush.collect;
+
+import io.uve.yypush.config.Config;
 
 import java.io.IOException;
 import java.nio.file.FileVisitResult;
@@ -13,8 +15,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
-
-import com.sailing.config.Config;
 
 public enum FileType {
 	ACCESS{

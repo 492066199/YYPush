@@ -1,4 +1,7 @@
-package com.sailing.collect;
+package io.uve.yypush.collect;
+
+import io.uve.yypush.config.Config;
+import io.uve.yypush.zookeeper.ZkMonitorPath;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -7,9 +10,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
-
-import com.sailing.config.Config;
-import com.sailing.zookeeper.ZkMonitorPath;
 
 public class CollectorThread implements Runnable{
 	private static Logger log = Logger.getLogger(CollectorThread.class);

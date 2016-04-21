@@ -1,4 +1,6 @@
-package com.sailing.zookeeper;
+package io.uve.yypush.zookeeper;
+
+import io.uve.yypush.model.ChangeNode;
 
 import java.util.List;
 import java.util.concurrent.locks.Condition;
@@ -6,7 +8,6 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.google.common.collect.Lists;
-import com.sailing.model.ChangeNode;
 
 public enum ZookeeperNodeLock {
 	instance;

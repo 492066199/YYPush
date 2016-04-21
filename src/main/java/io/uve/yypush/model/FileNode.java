@@ -1,4 +1,4 @@
-package com.sailing.model;
+package io.uve.yypush.model;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;

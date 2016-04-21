@@ -1,4 +1,7 @@
-package com.sailing.collect;
+package io.uve.yypush.collect;
+
+import io.uve.yypush.collect.FileType.FindJavaVisitor;
+import io.uve.yypush.model.FileNode;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -19,9 +22,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
-
-import com.sailing.collect.FileType.FindJavaVisitor;
-import com.sailing.model.FileNode;
 
 public class DirLogCollector extends Collector{
 	private static Logger log = Logger.getLogger(DirLogCollector.class);

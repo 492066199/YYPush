@@ -1,4 +1,4 @@
-package com.sailing.zookeeper;
+package io.uve.yypush.zookeeper;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;

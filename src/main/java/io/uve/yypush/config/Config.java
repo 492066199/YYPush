@@ -1,10 +1,11 @@
-package com.sailing.config;
+package io.uve.yypush.config;
+
+import io.uve.yypush.collect.FileType;
 
 import java.util.Properties;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.sailing.collect.FileType;
 
 public class Config {
 	@JsonIgnore

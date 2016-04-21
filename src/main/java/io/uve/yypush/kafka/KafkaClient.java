@@ -1,4 +1,4 @@
-package com.sailing.kafka;
+package io.uve.yypush.kafka;
 
 import java.util.Properties;
 

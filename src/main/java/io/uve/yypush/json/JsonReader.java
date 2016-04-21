@@ -1,4 +1,4 @@
-package com.sailing.json;
+package io.uve.yypush.json;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

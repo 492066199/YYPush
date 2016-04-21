@@ -1,4 +1,12 @@
-package com.sailing;
+package io.uve.yypush;
+
+import io.uve.yypush.collect.CollectorThread;
+import io.uve.yypush.config.Config;
+import io.uve.yypush.json.JsonReader;
+import io.uve.yypush.model.ChangeNode;
+import io.uve.yypush.zookeeper.ZkConfig;
+import io.uve.yypush.zookeeper.ZkFactory;
+import io.uve.yypush.zookeeper.ZookeeperNodeLock;
 
 import java.io.IOException;
 import java.net.Inet4Address;
@@ -20,13 +28,6 @@ import org.apache.log4j.Logger;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.sailing.collect.CollectorThread;
-import com.sailing.config.Config;
-import com.sailing.json.JsonReader;
-import com.sailing.model.ChangeNode;
-import com.sailing.zookeeper.ZkConfig;
-import com.sailing.zookeeper.ZkFactory;
-import com.sailing.zookeeper.ZookeeperNodeLock;
 
 public class Sailing {
 	private static Logger log = Logger.getLogger(Sailing.class);

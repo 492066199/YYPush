@@ -1,4 +1,11 @@
-package com.sailing.collect;
+package io.uve.yypush.collect;
+
+import io.uve.yypush.Sailing;
+import io.uve.yypush.config.Config;
+import io.uve.yypush.kafka.KafkaClient;
+import io.uve.yypush.kafka.KafkaSet;
+import io.uve.yypush.model.FileNode;
+import io.uve.yypush.zookeeper.ZkMonitorPath;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -6,13 +13,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import org.joda.time.DateTime;
-
-import com.sailing.Sailing;
-import com.sailing.config.Config;
-import com.sailing.kafka.KafkaClient;
-import com.sailing.kafka.KafkaSet;
-import com.sailing.model.FileNode;
-import com.sailing.zookeeper.ZkMonitorPath;
 
 public abstract class Collector {
 	public Config config;

@@ -1,4 +1,4 @@
-package com.sailing.model;
+package io.uve.yypush.model;
 
 import java.util.List;
 import java.util.Map;
