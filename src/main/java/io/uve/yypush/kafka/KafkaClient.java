@@ -5,6 +5,11 @@ import java.util.Properties;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public class KafkaClient {
 	private final KafkaProducer<byte[], byte[]> producer;
 	//private final AtomicInteger refs = new AtomicInteger();

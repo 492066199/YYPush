@@ -11,6 +11,11 @@ import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public class CollectorThread implements Runnable{
 	private static Logger log = Logger.getLogger(CollectorThread.class);
 	private final CountDownLatch countDownLatch = new CountDownLatch(1); 

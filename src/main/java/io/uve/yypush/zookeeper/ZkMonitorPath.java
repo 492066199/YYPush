@@ -4,6 +4,11 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public enum ZkMonitorPath {
 	instance;
 	public final Lock lock = new ReentrantLock(); 

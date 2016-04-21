@@ -1,6 +1,10 @@
 package io.uve.yypush.zookeeper;
 
-
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public class ZkFactory {
 	private static volatile boolean expare = false;
 	private static volatile ZkConfig zkConfig = null;

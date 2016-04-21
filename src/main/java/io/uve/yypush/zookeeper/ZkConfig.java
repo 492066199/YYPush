@@ -24,7 +24,11 @@ import org.joda.time.DateTime;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public class ZkConfig implements Watcher {
 	private static Logger log = Logger.getLogger(ZkConfig.class);
 	public final static String zkBase = "/logpush";

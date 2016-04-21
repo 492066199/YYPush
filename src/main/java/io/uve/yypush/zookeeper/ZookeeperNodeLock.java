@@ -9,6 +9,11 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import com.google.common.collect.Lists;
 
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public enum ZookeeperNodeLock {
 	instance;
 	private final Lock lock = new ReentrantLock(); 

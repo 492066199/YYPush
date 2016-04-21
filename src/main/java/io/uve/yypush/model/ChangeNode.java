@@ -3,6 +3,11 @@ package io.uve.yypush.model;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public class ChangeNode {
 	
 	private boolean useMap;

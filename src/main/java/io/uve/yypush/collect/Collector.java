@@ -14,6 +14,11 @@ import java.util.concurrent.TimeoutException;
 
 import org.joda.time.DateTime;
 
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public abstract class Collector {
 	public Config config;
 	public KafkaClient producer;	

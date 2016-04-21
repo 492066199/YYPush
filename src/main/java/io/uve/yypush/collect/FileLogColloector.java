@@ -17,6 +17,11 @@ import java.util.concurrent.TimeoutException;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public class FileLogColloector extends Collector{
 	private static Logger log = Logger.getLogger(FileLogColloector.class);
 	private FileNode node;

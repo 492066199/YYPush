@@ -7,6 +7,11 @@ import java.util.Properties;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public class Config {
 	@JsonIgnore
 	public String name;

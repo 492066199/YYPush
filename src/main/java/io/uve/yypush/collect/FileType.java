@@ -16,6 +16,11 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public enum FileType {
 	ACCESS{
 		

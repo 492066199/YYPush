@@ -29,6 +29,11 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 
+/**
+ * 
+ * @author yangyang21@staff.weibo.com(yangyang)
+ * 
+ */
 public class Sailing {
 	private static Logger log = Logger.getLogger(Sailing.class);
 	public static final AtomicReference<String> acceptIp = new AtomicReference<String>();
