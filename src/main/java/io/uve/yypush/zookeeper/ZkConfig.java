@@ -179,6 +179,7 @@ public class ZkConfig implements Watcher {
 			Stat tmpstat = this.zk.exists(namePath, false);
 			if(tmpstat == null){
 				this.zk.create(namePath, "".getBytes(), Ids.OPEN_ACL_UNSAFE, CreateMode.EPHEMERAL);
+				log.info("thread register successful:" + namePath);
 			}
 		} catch (KeeperException | InterruptedException e) {
 			e.printStackTrace();
