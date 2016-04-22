@@ -127,6 +127,12 @@ public class Sailing {
 			log.info("not contains this ip");
 			return;
 		}
+		
+		if(config.kafkaName == null || config.kafkaName.isEmpty()|| config.feed == null || config.feed.isEmpty()){
+			log.info("config is not valid");
+			return;
+		}
+		
 		CollectorThread cur = new CollectorThread(config);
 		Future<?> future = threadpool.submit(cur);
 		log.info("init thread: " + config.name);	
