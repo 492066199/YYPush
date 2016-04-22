@@ -217,8 +217,12 @@ public class ZkConfig implements Watcher {
 		String namePath = zkBaseMonitor  + "/" + ip + "/" + name.replace('/', '.').substring(zkBase.length() + 1);
 		try {
 			this.zk.setData(namePath, new DateTime().toString().getBytes(), -1);
-		} catch (KeeperException | InterruptedException e) {
-			e.printStackTrace();
+		} catch (KeeperException e1){
+			e1.printStackTrace();
+		} catch (InterruptedException e) {
+			//fix bug
+			log.info("when heart I recv a inter!");
+			Thread.currentThread().interrupt();
 		}
 	}
 }
