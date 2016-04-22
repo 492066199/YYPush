@@ -7,6 +7,7 @@ usage()
   exit 1
 }
 
+export zookeeper="172.16.89.130:2181,172.16.89.128:2181,172.16.89.129:2181"
 export JAVA_HOME=/usr/local/jdk
 PATH=/usr/local/jdk/bin:$PATH
 
@@ -28,7 +29,7 @@ case "$ACTION" in
   start)
     echo "Starting logpush ... "
     rsync 10.77.96.122::logpush/logpush-0.0.1-jar-with-dependencies.jar ./
-    nohup java -cp logpush-0.0.1-jar-with-dependencies.jar com.sailing.Sailing > error.log 2>&1 &
+    nohup java -server -XX:MaxDirectMemorySize=2g -Xmx2g -XX:+UseConcMarkSweepGC -cp logpush-0.0.1-jar-with-dependencies.jar io.uve.yypush.Sailing > error.log 2>&1 &
     pid=`jps|grep Sailing|awk '{print $1}'`
     echo "running pid:$pid "	
   ;;
